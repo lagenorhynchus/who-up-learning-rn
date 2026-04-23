@@ -1,31 +1,34 @@
+"""Tests for P-stream transform and backbone. Run from project root: python -m pytest tests/"""
+
 import torch
 import numpy as np
 
-from p_transform import PStreamTransform
-from p_backbone import PStreamBackbone
+# Imports now use the models package instead of the old p-stream/ local path
+from models.p_transform import PStreamTransform
+from models.p_backbone import PStreamBackbone
 
 
 def test_transform_preserves_shape():
     """Transform returns same shape as input for a (B, 3, H, W) batch."""
     t = PStreamTransform()
-    out = t(torch.randn(16, 3, 32, 32))
-    assert tuple(out.shape) == (16, 3, 32, 32), f"got {tuple(out.shape)}"
+    out = t(torch.randn(16, 3, 128, 128))
+    assert tuple(out.shape) == (16, 3, 128, 128), f"got {tuple(out.shape)}"
     print("test_transform_preserves_shape passed")
 
 
 def test_transform_zero_on_flat_input():
     """A constant (flat) image has no high-frequency content, so output is ~0."""
     t = PStreamTransform()
-    flat = torch.ones(1, 3, 32, 32) * 0.5
+    flat = torch.ones(1, 3, 128, 128) * 0.5
     out = t(flat)
     np.testing.assert_array_less(out.abs().max().item(), 0.01)
     print("test_transform_zero_on_flat_input passed")
 
 
 def test_backbone_output_shape():
-    """Backbone maps (B, 3, 32, 32) to a (B, 128) feature vector."""
+    """Backbone maps (B, 3, 128, 128) to a (B, 128) feature vector."""
     model = PStreamBackbone()
-    out = model(torch.randn(16, 3, 32, 32))
+    out = model(torch.randn(16, 3, 128, 128))
     assert tuple(out.shape) == (16, 128), f"got {tuple(out.shape)}"
     print("test_backbone_output_shape passed")
 
@@ -34,7 +37,7 @@ def test_full_pipeline_no_nans():
     """Transform then backbone on random input yields a finite (B, 128) feature vector."""
     t = PStreamTransform()
     model = PStreamBackbone()
-    out = model(t(torch.randn(16, 3, 32, 32)))
+    out = model(t(torch.randn(16, 3, 128, 128)))
     assert tuple(out.shape) == (16, 128)
     assert not torch.isnan(out).any()
     print("test_full_pipeline_no_nans passed")
@@ -44,7 +47,7 @@ def test_gradient_flow():
     """Backprop through transform + backbone produces a non-zero gradient on every learnable param."""
     t = PStreamTransform()
     model = PStreamBackbone()
-    out = model(t(torch.randn(16, 3, 32, 32)))
+    out = model(t(torch.randn(16, 3, 128, 128)))
     out.sum().backward()
     for name, param in model.named_parameters():
         if not param.requires_grad:
@@ -54,14 +57,10 @@ def test_gradient_flow():
     print("test_gradient_flow passed")
 
 
-def main():
+if __name__ == "__main__":
     test_transform_preserves_shape()
     test_transform_zero_on_flat_input()
     test_backbone_output_shape()
     test_full_pipeline_no_nans()
     test_gradient_flow()
     print("ALL TESTS PASSED")
-
-
-if __name__ == "__main__":
-    main()

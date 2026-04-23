@@ -3,10 +3,25 @@ import torch.nn as nn
 
 
 class PStreamBackbone(nn.Module):
-    """P-stream backbone: 3 conv blocks mapping high-pass RGB to a 128-dim feature vector."""
+    """
+    Lightweight CNN mirroring the parvocellular (P) visual pathway.
 
-    def __init__(self):
-        """Build conv / batch norm / relu / pool layers for three blocks 3 -> 32 -> 64 -> 128."""
+    Input  : (B, 3, H, W)  — high-pass filtered RGB
+    Output : (B, 128)       — flat feature vector, no classification head
+
+    Architecture (input-size agnostic via AdaptiveAvgPool2d):
+
+        Block 1  Conv 3→32,  MaxPool2d(2)
+        Block 2  Conv 32→64, MaxPool2d(2)
+        Block 3  Conv 64→128,AdaptiveAvgPool2d(1)
+        Flatten                         →  (B, 128)
+
+    Biological grounding:
+        Chromatic (3-ch RGB), high spatial frequency (upstream high-pass filter),
+        fine-detail sensitivity — no FC head, feeds fusion layer.
+    """
+
+    def __init__(self) -> None:
         super(PStreamBackbone, self).__init__()
 
         self.conv1 = nn.Conv2d(3, 32, kernel_size=3, padding=1)
@@ -24,8 +39,16 @@ class PStreamBackbone(nn.Module):
         self.relu3 = nn.ReLU()
         self.pool3 = nn.AdaptiveAvgPool2d(1)
 
-    def forward(self, inputs):
-        """Run the three conv blocks on (B, 3, H, W) inputs and return a (B, 128) feature vector."""
+    def forward(self, inputs: torch.Tensor) -> torch.Tensor:
+        """
+        Parameters
+        ----------
+        inputs : torch.Tensor  shape (B, 3, H, W)
+
+        Returns
+        -------
+        torch.Tensor  shape (B, 128)
+        """
         x1 = self.conv1(inputs)
         x1 = self.batch_norm1(x1)
         x1 = self.relu1(x1)
@@ -41,5 +64,4 @@ class PStreamBackbone(nn.Module):
         x3 = self.relu3(x3)
         x3 = self.pool3(x3)
 
-        features = x3.reshape(x3.shape[0], -1)
-        return features
+        return x3.reshape(x3.shape[0], -1)  # (B, 128)

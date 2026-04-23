@@ -1,0 +1,23 @@
+# CIFAR-100 dataset — downloaded at runtime, never commit
+data/
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Generated outputs (plots, checkpoints) — uncomment to exclude from repo
+# outputs/
+
+# macOS
+.DS_Store
+
+# Editor
+.idea/
+.vscode/
+*.swp

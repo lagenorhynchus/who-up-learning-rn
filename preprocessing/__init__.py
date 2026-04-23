@@ -1,6 +1,5 @@
 from .transforms import (
     LowPassGrayscale,
-    HighPassColor,
     get_m_stream_transform,
     get_p_stream_transform,
     get_standard_transform

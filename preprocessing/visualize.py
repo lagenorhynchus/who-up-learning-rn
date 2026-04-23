@@ -4,43 +4,51 @@ Visualization utilities to verify preprocessing is working correctly.
 
 import matplotlib.pyplot as plt
 import numpy as np
-from .transforms import LowPassGrayscale, HighPassColor
+import torchvision.transforms as T
+from .transforms import LowPassGrayscale
 from .dataset import create_dual_stream_loaders, get_10_class_names
+from models.p_transform import PStreamTransform
+
+
+# PStreamTransform works on tensors, so we need ToTensor before applying it
+_to_tensor = T.ToTensor()
+_p_viz = PStreamTransform(kernel_size=5, sigma=2.0)
 
 
 def visualize_transformations(num_samples=4, save_path='preview.png'):
     """Show original, M-stream, and P-stream versions of the same images."""
     from torchvision.datasets import CIFAR100
-    
+
     full_dataset = CIFAR100(root='./data', train=True, download=True)
     indices = [i for i, (_, label) in enumerate(full_dataset) if label < 10]
-    
+
     m_transform = LowPassGrayscale(sigma=3.0)
-    p_transform = HighPassColor(sigma=3.0, strength=1.0)
     class_names = get_10_class_names()
-    
-    fig, axes = plt.subplots(num_samples, 3, figsize=(9, 3*num_samples))
-    
+
+    fig, axes = plt.subplots(num_samples, 3, figsize=(9, 3 * num_samples))
+
     for i in range(num_samples):
         idx = indices[i]
         img, label = full_dataset[idx]
         class_name = class_names[label]
-        
-        m_img = m_transform(img)
-        p_img = p_transform(img)
-        
+
+        m_img = m_transform(img)                          # PIL grayscale
+        # PStreamTransform needs a tensor; .visualize() centers at 0.5 for display
+        p_img = _p_viz.visualize(_to_tensor(img))         # (3, H, W) in [0,1]
+        p_img_np = p_img.permute(1, 2, 0).numpy()
+
         axes[i, 0].imshow(img)
         axes[i, 0].set_title(f'Original: {class_name}')
         axes[i, 0].axis('off')
-        
+
         axes[i, 1].imshow(m_img, cmap='gray')
         axes[i, 1].set_title(f'M-Stream: {class_name}')
         axes[i, 1].axis('off')
-        
-        axes[i, 2].imshow(p_img)
+
+        axes[i, 2].imshow(p_img_np)
         axes[i, 2].set_title(f'P-Stream: {class_name}')
         axes[i, 2].axis('off')
-    
+
     plt.tight_layout()
     plt.savefig(save_path, dpi=150)
     plt.close()

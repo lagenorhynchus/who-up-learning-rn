@@ -65,20 +65,19 @@ def create_dual_stream_loaders(
     num_workers=4,
     img_size=128,
     sigma=3.0,
-    strength=1.0,
     use_10_class_subset=True
 ):
     """
     Create train and validation DataLoaders for dual-stream model.
-    
+
     Args:
         use_10_class_subset: True for 10 classes (development), False for full 100 classes (final)
-    
+
     Returns:
         train_loader, val_loader, num_classes
     """
     m_transform = get_m_stream_transform(sigma=sigma, img_size=img_size)
-    p_transform = get_p_stream_transform(sigma=sigma, strength=strength, img_size=img_size)
+    p_transform = get_p_stream_transform(sigma=sigma, img_size=img_size)
     
     train_full = CIFAR100(root=data_dir, train=True, download=True)
     val_full = CIFAR100(root=data_dir, train=False, download=True)
@@ -97,28 +96,25 @@ def create_dual_stream_loaders(
     train_dataset = DualStreamDataset(train_base, m_transform, p_transform)
     val_dataset = DualStreamDataset(val_base, m_transform, p_transform)
     
-    # Check if running on MPS (Apple Silicon) to disable pin_memory
-    if torch.backends.mps.is_available():
-        use_pin_memory = False
-    else:
-        use_pin_memory = True
-    
+    # pin_memory only works with CUDA; disable on MPS and CPU
+    use_pin_memory = torch.cuda.is_available()
+
     train_loader = DataLoader(
         train_dataset,
         batch_size=batch_size,
         shuffle=True,
         num_workers=num_workers,
-        pin_memory=use_pin_memory
+        pin_memory=use_pin_memory,
     )
-    
+
     val_loader = DataLoader(
         val_dataset,
         batch_size=batch_size,
         shuffle=False,
         num_workers=num_workers,
-        pin_memory=use_pin_memory
+        pin_memory=use_pin_memory,
     )
-    
+
     return train_loader, val_loader, num_classes
 
 
@@ -131,10 +127,10 @@ def create_single_stream_loaders(
 ):
     """Create DataLoaders for standard single-stream baseline."""
     transform = get_standard_transform(img_size=img_size)
-    
+
     train_full = CIFAR100(root=data_dir, train=True, download=True)
     val_full = CIFAR100(root=data_dir, train=False, download=True)
-    
+
     if use_10_class_subset:
         train_base = get_10_class_subset(train_full)
         val_base = get_10_class_subset(val_full)
@@ -143,32 +139,28 @@ def create_single_stream_loaders(
         train_base = train_full
         val_base = val_full
         num_classes = 100
-    
+
     train_dataset = SingleStreamDataset(train_base, transform)
     val_dataset = SingleStreamDataset(val_base, transform)
-    
-    # Check if running on MPS (Apple Silicon) to disable pin_memory
-    if torch.backends.mps.is_available():
-        use_pin_memory = False
-    else:
-        use_pin_memory = True
-    
+
+    use_pin_memory = torch.cuda.is_available()
+
     train_loader = DataLoader(
         train_dataset,
         batch_size=batch_size,
         shuffle=True,
         num_workers=num_workers,
-        pin_memory=use_pin_memory
+        pin_memory=use_pin_memory,
     )
-    
+
     val_loader = DataLoader(
         val_dataset,
         batch_size=batch_size,
         shuffle=False,
         num_workers=num_workers,
-        pin_memory=use_pin_memory
+        pin_memory=use_pin_memory,
     )
-    
+
     return train_loader, val_loader, num_classes
 
 
