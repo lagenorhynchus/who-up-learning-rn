@@ -1,0 +1,48 @@
+Device      : cuda
+Mode        : full training
+Num classes : 100
+Alpha       : 0.5  (learnable=True)
+
+100-class mode. Train: 50000, Val: 10000
+Epoch   1/40  train loss=4.1694 acc=0.081  val loss=4.5651 acc=0.055  alpha=0.502
+Epoch   2/40  train loss=3.5778 acc=0.168  val loss=3.8365 acc=0.122  alpha=0.407
+Epoch   3/40  train loss=3.2868 acc=0.211  val loss=3.5429 acc=0.163  alpha=0.352
+Epoch   4/40  train loss=3.1177 acc=0.241  val loss=4.6683 acc=0.103  alpha=0.319
+Epoch   5/40  train loss=3.0078 acc=0.262  val loss=3.9493 acc=0.137  alpha=0.303
+Epoch   6/40  train loss=2.9207 acc=0.278  val loss=3.3678 acc=0.194  alpha=0.292
+Epoch   7/40  train loss=2.8461 acc=0.292  val loss=3.0572 acc=0.241  alpha=0.287
+Epoch   8/40  train loss=2.7882 acc=0.303  val loss=3.5995 acc=0.181  alpha=0.284
+Epoch   9/40  train loss=2.7347 acc=0.313  val loss=5.2032 acc=0.104  alpha=0.284
+Epoch  10/40  train loss=2.6907 acc=0.321  val loss=4.2379 acc=0.130  alpha=0.283
+Epoch  11/40  train loss=2.6455 acc=0.334  val loss=3.5480 acc=0.200  alpha=0.280
+Epoch  12/40  train loss=2.6081 acc=0.340  val loss=3.7008 acc=0.196  alpha=0.280
+Epoch  13/40  train loss=2.5753 acc=0.345  val loss=3.1930 acc=0.247  alpha=0.279
+Epoch  14/40  train loss=2.5433 acc=0.354  val loss=2.9096 acc=0.281  alpha=0.280
+Epoch  15/40  train loss=2.5159 acc=0.358  val loss=2.9761 acc=0.278  alpha=0.278
+Epoch  16/40  train loss=2.4891 acc=0.363  val loss=4.2999 acc=0.166  alpha=0.278
+Epoch  17/40  train loss=2.4604 acc=0.369  val loss=3.6529 acc=0.196  alpha=0.276
+Epoch  18/40  train loss=2.4407 acc=0.374  val loss=3.9986 acc=0.168  alpha=0.275
+Epoch  19/40  train loss=2.4157 acc=0.380  val loss=3.1947 acc=0.256  alpha=0.276
+Epoch  20/40  train loss=2.3921 acc=0.384  val loss=2.9630 acc=0.281  alpha=0.276
+Epoch  21/40  train loss=2.3673 acc=0.390  val loss=3.0303 acc=0.277  alpha=0.275
+Epoch  22/40  train loss=2.3563 acc=0.391  val loss=3.1080 acc=0.256  alpha=0.276
+Epoch  23/40  train loss=2.3392 acc=0.397  val loss=3.0634 acc=0.264  alpha=0.275
+Epoch  24/40  train loss=2.3159 acc=0.401  val loss=2.6839 acc=0.314  alpha=0.274
+Epoch  25/40  train loss=2.2996 acc=0.406  val loss=3.3685 acc=0.231  alpha=0.275
+Epoch  26/40  train loss=2.2867 acc=0.406  val loss=2.9996 acc=0.281  alpha=0.274
+Epoch  27/40  train loss=2.2731 acc=0.411  val loss=3.0638 acc=0.268  alpha=0.276
+Epoch  28/40  train loss=2.2531 acc=0.413  val loss=3.2247 acc=0.259  alpha=0.277
+Epoch  29/40  train loss=2.2377 acc=0.419  val loss=3.3006 acc=0.231  alpha=0.278
+Epoch  30/40  train loss=2.2241 acc=0.422  val loss=2.8105 acc=0.317  alpha=0.277
+Epoch  31/40  train loss=2.2151 acc=0.422  val loss=2.8217 acc=0.303  alpha=0.276
+Epoch  32/40  train loss=2.1974 acc=0.428  val loss=3.0757 acc=0.276  alpha=0.277
+Epoch  33/40  train loss=2.1826 acc=0.431  val loss=4.1303 acc=0.199  alpha=0.276
+Epoch  34/40  train loss=2.1697 acc=0.433  val loss=2.9480 acc=0.296  alpha=0.278
+Epoch  35/40  train loss=2.1540 acc=0.437  val loss=2.6830 acc=0.338  alpha=0.279
+Epoch  36/40  train loss=2.1481 acc=0.438  val loss=3.1964 acc=0.262  alpha=0.280
+Epoch  37/40  train loss=2.1369 acc=0.441  val loss=3.0768 acc=0.278  alpha=0.280
+Epoch  38/40  train loss=2.1261 acc=0.445  val loss=3.1304 acc=0.268  alpha=0.282
+Epoch  39/40  train loss=2.1107 acc=0.448  val loss=3.5292 acc=0.231  alpha=0.282
+Epoch  40/40  train loss=2.1018 acc=0.449  val loss=3.2577 acc=0.261  alpha=0.281
+  Loss curve saved → ./models/train_loss.png
+  Checkpoint saved → ./models/checkpoint_epoch40.pt

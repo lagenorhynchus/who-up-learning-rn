@@ -1,0 +1,11 @@
+Stylized-ImageNet Evaluation Results (Nearest Centroid Classifier)
+============================================================
+Number of images: 800
+Number of classes: 16
+
+Exp1: Default (α=0.5 learnable): 9.25%
+Exp2: Shape-Biased (α=0.8 fixed): 10.00%
+Exp3: Shape-Biased Learnable (α=0.8 start): 10.38%
+Exp4: Extreme Shape (α=0.9 fixed): 9.62%
+
+Best model: Exp3: Shape-Biased Learnable (α=0.8 start) (10.38%)
